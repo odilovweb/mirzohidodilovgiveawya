@@ -167,7 +167,7 @@ bot.start(async (ctx) => {
         if (referralId) {
           bot.telegram.sendMessage(
             referralId,
-            `[${ctx.from.id}](tg://user?id=${ctx.from.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi , to'liq shartlarni bajargan so'ng referal hisobingizga qo'shiladi ⏳`,
+            `[${ctx.from.id}](tg://user?id=${ctx.from.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi , to'liq shartlarni bajargandan so'ng referal hisobingizga qo'shiladi ⏳`,
             {
               parse_mode: "Markdown",
             }
@@ -195,6 +195,25 @@ bot.start(async (ctx) => {
       }
 
       if (isMember) {
+        try {
+          ctx.reply(
+            `🎉 Xush kelibsiz! Siz konkursda qatnashyapsiz.
+          
+  Botdan to'liq foydalanishingiz mumkin`,
+            {
+              reply_markup: {
+                keyboard: [
+                  [{ text: "Konkurslar 🎁" }, { text: "Reyting 🏆" }],
+                  [{ text: "Referal Link 🔗" }],
+                ],
+                resize_keyboard: true,
+              },
+            }
+          );
+        } catch (error) {
+          console.log(error);
+        }
+
         if (referralId) {
           const inviterRef = doc(db, "users", referralId.toString());
           const inviterSnap = await getDoc(inviterRef);
