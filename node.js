@@ -297,74 +297,82 @@ bot.start(async (ctx) => {
 });
 
 bot.on("message", async (ctx) => {
-  const isMember = await checkMembership(ctx.from.id);
-  if (!isMember) {
-    return ctx.reply(
-      `❌ Siz kanalga a'zo emassiz! Konkursda qatnashish uchun quyidagi kanalga qo'shiling:\n[Kanalga qo'shilish](https://t.me/${CHANNEL_USERNAME.replace(
-        "@",
-        ""
-      )})`,
-      {
-        parse_mode: "Markdown",
-        disable_web_page_preview: true,
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "Tekshirish 🔄",
-                callback_data: `addReferal_${referralId}`,
-              },
-            ],
-          ],
-        },
+  try {
+    const isMember = await checkMembership(ctx.from.id);
+    if (!isMember) {
+      try {
+        return ctx.reply(
+          `❌ Siz kanalga a'zo emassiz! Konkursda qatnashish uchun quyidagi kanalga qo'shiling:\n[Kanalga qo'shilish](https://t.me/${CHANNEL_USERNAME.replace(
+            "@",
+            ""
+          )})`,
+          {
+            parse_mode: "Markdown",
+            disable_web_page_preview: true,
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  {
+                    text: "Tekshirish 🔄",
+                    callback_data: `addReferal_null`,
+                  },
+                ],
+              ],
+            },
+          }
+        );
+      } catch (error) {
+        console.log(error);
       }
-    );
-  } else if (ctx.message.text == "Reyting 🏆") {
-    try {
-      const usersSnapshot = await getDocs(collection(db, "users"));
-      let users = [];
-      usersSnapshot.forEach((doc) => {
-        users.push({
-          username: doc.data().username,
-          referrals: doc.data().referrals,
-          id: doc.data().userId,
+    } else if (ctx.message.text == "Reyting 🏆") {
+      try {
+        const usersSnapshot = await getDocs(collection(db, "users"));
+        let users = [];
+        usersSnapshot.forEach((doc) => {
+          users.push({
+            username: doc.data().username,
+            referrals: doc.data().referrals,
+            id: doc.data().userId,
+          });
         });
-      });
-      users.sort((a, b) => b.referrals - a.referrals);
-      let message = "🏆 Eng ko‘p referal chaqirganlar:\n";
-      users.slice(0, 10).forEach((user, index) => {
-        message += `${index + 1}. [${user.id}](tg://user?id=${user.id}) - ${
-          user.referrals
-        } ta referal\n`;
-      });
+        users.sort((a, b) => b.referrals - a.referrals);
+        let message = "🏆 Eng ko‘p referal chaqirganlar:\n";
+        users.slice(0, 10).forEach((user, index) => {
+          message += `${index + 1}. [${user.id}](tg://user?id=${user.id}) - ${
+            user.referrals
+          } ta referal\n`;
+        });
 
-      ctx.reply(message, { parse_mode: "Markdown" });
-    } catch (error) {
-      console.log(error);
-    }
-  } else if (ctx.message.text == "Konkurslar 🎁") {
-    if (!konkurslar) {
-      await getContests();
-      setTimeout(() => {
-        konkurslar = null;
-      }, 1000 * 60 * 10);
-    }
-    ctx.reply(konkurslar, { parse_mode: "Markdown" });
-  } else if (ctx.message.text == "Referal Link 🔗") {
-    try {
-      const usersRef = doc(db, "users", ctx.from.id.toString());
-      const usersSnap = await getDoc(usersRef);
-      let count;
-      if (usersSnap.exists()) {
-        count = await usersSnap.data.referrals;
+        ctx.reply(message, { parse_mode: "Markdown" });
+      } catch (error) {
+        console.log(error);
       }
-      ctx.reply(
-        `Sizning referal linkingiz : https://t.me/Giveaway_NFT_bot?start=${ctx.from.id}
+    } else if (ctx.message.text == "Konkurslar 🎁") {
+      if (!konkurslar) {
+        await getContests();
+        setTimeout(() => {
+          konkurslar = null;
+        }, 1000 * 60 * 10);
+      }
+      ctx.reply(konkurslar, { parse_mode: "Markdown" });
+    } else if (ctx.message.text == "Referal Link 🔗") {
+      try {
+        const usersRef = doc(db, "users", ctx.from.id.toString());
+        const usersSnap = await getDoc(usersRef);
+        let count;
+        if (usersSnap.exists()) {
+          count = await usersSnap.data.referrals;
+        }
+        ctx.reply(
+          `Sizning referal linkingiz : https://t.me/Giveaway_NFT_bot?start=${ctx.from.id}
 Referallaringiz soni: ${count}`
-      );
-    } catch (error) {
-      console.log(error);
+        );
+      } catch (error) {
+        console.log(error);
+      }
     }
+  } catch (error) {
+    console.log(error);
   }
 });
 
