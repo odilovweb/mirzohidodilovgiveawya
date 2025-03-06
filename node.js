@@ -187,7 +187,7 @@ bot.start(async (ctx) => {
         const usersSnap = await getDoc(usersRef);
         if (usersSnap.exists()) {
           await updateDoc(usersRef, {
-            referrals: usersSnap.data().users + 1,
+            users: usersSnap.data().users + 1,
           });
         }
       } catch (error) {
