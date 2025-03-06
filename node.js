@@ -163,63 +163,87 @@ bot.start(async (ctx) => {
           referrals: 0,
           userId: ctx.from.id,
         });
-        const inviterRef = doc(db, "statistic", "W9VSzQk3401EYFK9FGe0");
-        const inviterSnap = await getDoc(inviterRef);
-        if (inviterSnap.exists()) {
-          await updateDoc(inviterRef, {
-            referrals: inviterSnap.data().users + 1,
+        const usersRef = doc(db, "statistic", "W9VSzQk3401EYFK9FGe0");
+        const usersSnap = await getDoc(userRef);
+        if (usersSnap.exists()) {
+          await updateDoc(usersRef, {
+            referrals: userSnap.data().users + 1,
           });
         }
       } catch (error) {
         console.log(error);
       }
-    }
 
-    if (!isMember) {
-      return ctx.reply(
-        `❌ Siz kanalga a'zo emassiz! Konkursda qatnashish uchun quyidagi kanalga qo'shiling:\n[Kanalga qo'shilish](https://t.me/${CHANNEL_USERNAME.replace(
-          "@",
-          ""
-        )})`,
-        {
-          parse_mode: "Markdown",
-          disable_web_page_preview: true,
-          reply_markup: {
-            inline_keyboard: [
-              [
-                {
-                  text: "Tekshirish 🔄",
-                  callback_data: `addReferal_${referralId}`,
-                },
+      if (isMember) {
+        if (referralId) {
+          const inviterRef = doc(db, "users", referralId.toString());
+          const inviterSnap = await getDoc(inviterRef);
+          if (inviterSnap.exists()) {
+            await updateDoc(inviterRef, {
+              referrals: inviterSnap.data().referrals + 1,
+            });
+          }
+        }
+      } else {
+        return ctx.reply(
+          `❌ Siz kanalga a'zo emassiz! Konkursda qatnashish uchun quyidagi kanalga qo'shiling:\n[Kanalga qo'shilish](https://t.me/${CHANNEL_USERNAME.replace(
+            "@",
+            ""
+          )})`,
+          {
+            parse_mode: "Markdown",
+            disable_web_page_preview: true,
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  {
+                    text: "Tekshirish 🔄",
+                    callback_data: `addReferal_${referralId}`,
+                  },
+                ],
               ],
-            ],
-          },
-        }
-      );
-    } else {
-      if (referralId) {
-        const inviterRef = doc(db, "users", referralId.toString());
-        const inviterSnap = await getDoc(inviterRef);
-        if (inviterSnap.exists()) {
-          await updateDoc(inviterRef, {
-            referrals: inviterSnap.data().referrals + 1,
-          });
-        }
+            },
+          }
+        );
       }
-      ctx.reply(
-        `🎉 Xush kelibsiz! Siz konkursda qatnashyapsiz.
-        
-Botdan to'liq foydalanishingiz mumkin`,
-        {
-          reply_markup: {
-            keyboard: [
-              [{ text: "Konkurslar 🎁" }, { text: "Reyting 🏆" }],
-              [{ text: "Referal Link 🔗" }],
-            ],
-            resize_keyboard: true,
-          },
-        }
-      );
+    } else {
+      if (!isMember) {
+        return ctx.reply(
+          `❌ Siz kanalga a'zo emassiz! Konkursda qatnashish uchun quyidagi kanalga qo'shiling:\n[Kanalga qo'shilish](https://t.me/${CHANNEL_USERNAME.replace(
+            "@",
+            ""
+          )})`,
+          {
+            parse_mode: "Markdown",
+            disable_web_page_preview: true,
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  {
+                    text: "Tekshirish 🔄",
+                    callback_data: `addReferal_null`,
+                  },
+                ],
+              ],
+            },
+          }
+        );
+      } else {
+        ctx.reply(
+          `🎉 Xush kelibsiz! Siz konkursda qatnashyapsiz.
+          
+  Botdan to'liq foydalanishingiz mumkin`,
+          {
+            reply_markup: {
+              keyboard: [
+                [{ text: "Konkurslar 🎁" }, { text: "Reyting 🏆" }],
+                [{ text: "Referal Link 🔗" }],
+              ],
+              resize_keyboard: true,
+            },
+          }
+        );
+      }
     }
   } catch (error) {
     console.log(error);
