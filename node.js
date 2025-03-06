@@ -167,7 +167,7 @@ bot.start(async (ctx) => {
         if (referralId) {
           bot.telegram.sendMessage(
             referralId,
-            `[${user.id}](tg://user?id=${user.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi , to'liq shartlarni bajargan so'ng referal hisobingizga qo'shiladi ⏳`,
+            `[${ctx.from.id}](tg://user?id=${ctx.from.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi , to'liq shartlarni bajargan so'ng referal hisobingizga qo'shiladi ⏳`,
             {
               parse_mode: "Markdown",
             }
@@ -200,7 +200,7 @@ bot.start(async (ctx) => {
           const inviterSnap = await getDoc(inviterRef);
           bot.telegram.sendMessage(
             referralId,
-            `[${user.id}](tg://user?id=${user.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi va to'liq shartlarni bajardi , referal hisobingizga qo'shildi✅🎊`,
+            `[${ctx.from.id}](tg://user?id=${ctx.from.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi va to'liq shartlarni bajardi , referal hisobingizga qo'shildi✅🎊`,
             {
               parse_mode: "Markdown",
             }
