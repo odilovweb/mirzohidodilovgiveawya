@@ -153,12 +153,23 @@ bot.start(async (ctx) => {
     const userSnap = await getDoc(userRef);
 
     if (!userSnap.exists()) {
-      await setDoc(userRef, {
-        username,
-        invited_by: referralId,
-        referrals: 0,
-        userId: ctx.from.id,
-      });
+      try {
+        await setDoc(userRef, {
+          username,
+          invited_by: referralId,
+          referrals: 0,
+          userId: ctx.from.id,
+        });
+        const inviterRef = doc(db, "statistic", "W9VSzQk3401EYFK9FGe0");
+        const inviterSnap = await getDoc(inviterRef);
+        if (inviterSnap.exists()) {
+          await updateDoc(inviterRef, {
+            referrals: inviterSnap.data().users + 1,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     if (!isMember) {
