@@ -72,6 +72,13 @@ bot.action(/^addReferal_([a-zA-Z0-9]+)$/, async (ctx) => {
     const isMember = await checkMembership(ctx.from.id);
     if (isMember) {
       if (userId) {
+        bot.telegram.sendMessage(
+          userId,
+          `[${ctx.from.id}](tg://user?id=${ctx.from.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi va to'liq shartlarni bajardi , referal hisobingizga qo'shildi✅🎊`,
+          {
+            parse_mode: "Markdown",
+          }
+        );
         const inviterRef = doc(db, "users", userId.toString());
         const inviterSnap = await getDoc(inviterRef);
         if (inviterSnap.exists()) {
@@ -157,6 +164,19 @@ bot.start(async (ctx) => {
 
     if (!userSnap.exists()) {
       try {
+        if (referralId) {
+          bot.telegram.sendMessage(
+            referralId,
+            `[${user.id}](tg://user?id=${user.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi , to'liq shartlarni bajargan so'ng referal hisobingizga qo'shiladi ⏳`,
+            {
+              parse_mode: "Markdown",
+            }
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      try {
         await setDoc(userRef, {
           username,
           invited_by: referralId,
@@ -164,7 +184,7 @@ bot.start(async (ctx) => {
           userId: ctx.from.id,
         });
         const usersRef = doc(db, "statistic", "W9VSzQk3401EYFK9FGe0");
-        const usersSnap = await getDoc(userRef);
+        const usersSnap = await getDoc(usersRef);
         if (usersSnap.exists()) {
           await updateDoc(usersRef, {
             referrals: userSnap.data().users + 1,
@@ -178,6 +198,13 @@ bot.start(async (ctx) => {
         if (referralId) {
           const inviterRef = doc(db, "users", referralId.toString());
           const inviterSnap = await getDoc(inviterRef);
+          bot.telegram.sendMessage(
+            referralId,
+            `[${user.id}](tg://user?id=${user.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi va to'liq shartlarni bajardi , referal hisobingizga qo'shildi✅🎊`,
+            {
+              parse_mode: "Markdown",
+            }
+          );
           if (inviterSnap.exists()) {
             await updateDoc(inviterRef, {
               referrals: inviterSnap.data().referrals + 1,
@@ -306,8 +333,15 @@ bot.on("message", async (ctx) => {
     ctx.reply(konkurslar, { parse_mode: "Markdown" });
   } else if (ctx.message.text == "Referal Link 🔗") {
     try {
+      const usersRef = doc(db, "users", ctx.from.id.toString());
+      const usersSnap = await getDoc(usersRef);
+      let count;
+      if (usersSnap.exists()) {
+        count = await usersRef.data().referrals;
+      }
       ctx.reply(
-        `Sizning referal linkingiz : https://t.me/Giveaway_NFT_bot?start=${ctx.from.id}`
+        `Sizning referal linkingiz : https://t.me/Giveaway_NFT_bot?start=${ctx.from.id}
+Referallaringiz soni: ${count}`
       );
     } catch (error) {
       console.log(error);
