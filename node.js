@@ -361,7 +361,7 @@ bot.on("message", async (ctx) => {
         const usersSnap = await getDoc(usersRef);
         let count;
         if (usersSnap.exists()) {
-          count = await usersSnap.data.referrals;
+          count = await usersSnap.data().referrals;
         }
         ctx.reply(
           `Sizning referal linkingiz : https://t.me/Giveaway_NFT_bot?start=${ctx.from.id}
