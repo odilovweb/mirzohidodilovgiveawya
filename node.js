@@ -267,8 +267,7 @@ bot.on("message", async (ctx) => {
           user.referrals
         } ta referal\n`;
       });
-      message += ` 
-🔗Sizning referal linkingiz : https://t.me/Giveaway_NFT_bot?start=${ctx.from.id}`;
+
       ctx.reply(message, { parse_mode: "Markdown" });
     } catch (error) {
       console.log(error);
@@ -310,8 +309,6 @@ bot.command("reyting", async (ctx) => {
         user.referrals
       } ta referal\n`;
     });
-    message += ` 
-Sizning referal linkingiz : https://t.me/Giveaway_NFT_bot?start=${ctx.from.id}`;
     ctx.reply(message, { parse_mode: "Markdown" });
   } catch (error) {
     console.log(error);
