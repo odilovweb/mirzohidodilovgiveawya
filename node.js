@@ -11,7 +11,7 @@ import {
 import { Telegraf } from "telegraf";
 import { message } from "telegraf/filters";
 
-const bot = new Telegraf("7988961945:AAHWevBrtHbhcSvcRxkYxObDkDImtlWbARc");
+const bot = new Telegraf("8097329004:AAFbgj8DkCfvSS_i9zGXTcrldo7FfIYSUqU");
 
 // Bot token va kanal username
 const CHANNEL_USERNAME = "@OneDrop_uz";
@@ -95,7 +95,10 @@ bot.action(/^addReferal_([a-zA-Z0-9]+)$/, async (ctx) => {
 Botdan to'liq foydalanishingiz mumkin`,
           {
             reply_markup: {
-              keyboard: [[{ text: "Konkurslar 🎁" }, { text: "Reyting 🏆" }]],
+              keyboard: [
+                [{ text: "Konkurslar 🎁" }, { text: "Reyting 🏆" }],
+                [{ text: "Referal Link 🔗" }],
+              ],
               resize_keyboard: true,
             },
           }
@@ -209,7 +212,10 @@ bot.start(async (ctx) => {
 Botdan to'liq foydalanishingiz mumkin`,
         {
           reply_markup: {
-            keyboard: [[{ text: "Konkurslar 🎁" }, { text: "Reyting 🏆" }]],
+            keyboard: [
+              [{ text: "Konkurslar 🎁" }, { text: "Reyting 🏆" }],
+              [{ text: "Referal Link 🔗" }],
+            ],
             resize_keyboard: true,
           },
         }
@@ -261,6 +267,8 @@ bot.on("message", async (ctx) => {
           user.referrals
         } ta referal\n`;
       });
+      message += ` 
+🔗Sizning referal linkingiz : https://t.me/Giveaway_NFT_bot?start=${ctx.from.id}`;
       ctx.reply(message, { parse_mode: "Markdown" });
     } catch (error) {
       console.log(error);
@@ -273,6 +281,14 @@ bot.on("message", async (ctx) => {
       }, 1000 * 60 * 10);
     }
     ctx.reply(konkurslar, { parse_mode: "Markdown" });
+  } else if (ctx.message.text == "Referal Link 🔗") {
+    try {
+      ctx.reply(
+        `Sizning referal linkingiz : https://t.me/Giveaway_NFT_bot?start=${ctx.from.id}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 });
 
@@ -294,6 +310,8 @@ bot.command("reyting", async (ctx) => {
         user.referrals
       } ta referal\n`;
     });
+    message += ` 
+Sizning referal linkingiz : https://t.me/Giveaway_NFT_bot?start=${ctx.from.id}`;
     ctx.reply(message, { parse_mode: "Markdown" });
   } catch (error) {
     console.log(error);
@@ -310,6 +328,7 @@ bot.command("konkurslar", async (ctx) => {
     contestsSnapshot.forEach((doc) => {
       message += `- ${doc.data().name} : ${doc.data().link}\n`;
     });
+
     ctx.reply(message, { parse_mode: "Markdown" });
   } catch (error) {
     console.log(error);
