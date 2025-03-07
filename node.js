@@ -60,7 +60,7 @@ async function getContests() {
   // }
 
   try {
-    const usersSnapshot = await getDocs(collection(db, "top3-1"));
+    const usersSnapshot = await getDocs(collection(db, "3day-1"));
     let users = [];
     usersSnapshot.forEach((doc) => {
       users.push({
