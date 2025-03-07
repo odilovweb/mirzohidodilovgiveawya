@@ -235,17 +235,19 @@ bot.start(async (ctx) => {
           });
         }
 
-        const contestRef = doc(db, "3day-1", userId.toString());
-        const contestSnap = await getDoc(contestRef);
-        if (contestSnap.exists()) {
-          await updateDoc(contestRef, {
-            referrals: contestSnap.data().referrals + 1,
-          });
-        } else {
-          await setDoc(contestRef, {
-            referrals: 0,
-            userId: ctx.from.id,
-          });
+        if (referralId) {
+          const contestRef = doc(db, "3day-1", referralId.toString());
+          const contestSnap = await getDoc(contestRef);
+          if (contestSnap.exists()) {
+            await updateDoc(contestRef, {
+              referrals: contestSnap.data().referrals + 1,
+            });
+          } else {
+            await setDoc(contestRef, {
+              referrals: 0,
+              userId: ctx.from.id,
+            });
+          }
         }
       } catch (error) {
         console.log(error);
@@ -385,7 +387,7 @@ bot.on("message", async (ctx) => {
       } catch (error) {
         console.log(error);
       }
-    } else if (ctx.message.text == "Reyting 🏆") {
+    } else if (ctx.message.text == "R--eyting 🏆") {
       try {
         const usersSnapshot = await getDocs(collection(db, "users"));
         let users = [];
@@ -408,7 +410,10 @@ bot.on("message", async (ctx) => {
       } catch (error) {
         console.log(error);
       }
-    } else if (ctx.message.text == "Konkurslar 🎁") {
+    } else if (
+      ctx.message.text == "Konkurslar 🎁" ||
+      ctx.message.text == "Reyting 🏆"
+    ) {
       if (!konkurslar) {
         await getContests();
         setTimeout(() => {
