@@ -64,7 +64,6 @@ async function getContests() {
     let users = [];
     usersSnapshot.forEach((doc) => {
       users.push({
-        username: doc.data().username,
         referrals: doc.data().referrals,
         id: doc.data().userId,
       });
@@ -127,7 +126,7 @@ bot.action(/^addReferal_([a-zA-Z0-9]+)$/, async (ctx) => {
         } else {
           await setDoc(contestRef, {
             referrals: 0,
-            userId: ctx.from.id,
+            userId: userId,
           });
         }
       }
@@ -245,7 +244,7 @@ bot.start(async (ctx) => {
           } else {
             await setDoc(contestRef, {
               referrals: 0,
-              userId: ctx.from.id,
+              userId: referralId,
             });
           }
         }
