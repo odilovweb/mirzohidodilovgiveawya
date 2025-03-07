@@ -78,7 +78,8 @@ async function getContests() {
       } ta referal\n`;
     });
 
-    message += "📢Barcha yangiliklar ushbu kanalda; @GiveawaysNFTs:\n";
+    message += `
+📢Barcha yangiliklar ushbu kanalda: @GiveawaysNFTs`;
 
     konkurslar = message;
   } catch (error) {
