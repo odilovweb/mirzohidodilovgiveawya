@@ -45,15 +45,41 @@ async function checkMembership(userId) {
 
 let konkurslar = null;
 async function getContests() {
-  try {
-    const contestsSnapshot = await getDocs(collection(db, "contests"));
-    if (contestsSnapshot.empty)
-      return ctx.reply("📢 Hozirda aktiv konkurslar yo‘q.");
+  // try {
+  //   const contestsSnapshot = await getDocs(collection(db, "contests"));
+  //   if (contestsSnapshot.empty)
+  //     return ctx.reply("📢 Hozirda aktiv konkurslar yo‘q.");
 
-    let message = "📢 Hozirgi konkurslar:\n";
-    contestsSnapshot.forEach((doc) => {
-      message += `- ${doc.data().name} : ${doc.data().link}\n`;
+  //   let message = "📢 Hozirgi konkurslar:\n";
+  //   contestsSnapshot.forEach((doc) => {
+  //     message += `- ${doc.data().name} : ${doc.data().link}\n`;
+  //   });
+  //   konkurslar = message;
+  // } catch (error) {
+  //   console.log(error);
+  // }
+
+  try {
+    const usersSnapshot = await getDocs(collection(db, "top3-1"));
+    let users = [];
+    usersSnapshot.forEach((doc) => {
+      users.push({
+        username: doc.data().username,
+        referrals: doc.data().referrals,
+        id: doc.data().userId,
+      });
     });
+    users.sort((a, b) => b.referrals - a.referrals);
+    let message =
+      "🏆 Ushbu konkursda eng ko'p eng ko'p referal yiqqan foydalanuvchilar 👇:\n";
+    users.slice(0, 10).forEach((user, index) => {
+      message += `${index + 1}. [${user.id}](tg://user?id=${user.id}) - ${
+        user.referrals
+      } ta referal\n`;
+    });
+
+    message += "📢Barcha yangiliklar ushbu kanalda; @GiveawaysNFTs:\n";
+
     konkurslar = message;
   } catch (error) {
     console.log(error);
@@ -88,6 +114,14 @@ bot.action(/^addReferal_([a-zA-Z0-9]+)$/, async (ctx) => {
         if (inviterSnap.exists()) {
           await updateDoc(inviterRef, {
             referrals: inviterSnap.data().referrals + 1,
+          });
+        }
+
+        const contestRef = doc(db, "3day-1", userId.toString());
+        const contestSnap = await getDoc(contestRef);
+        if (contestSnap.exists()) {
+          await updateDoc(contestRef, {
+            referrals: contestSnap.data().referrals + 1,
           });
         }
       }
@@ -192,6 +226,14 @@ bot.start(async (ctx) => {
         if (usersSnap.exists()) {
           await updateDoc(usersRef, {
             users: usersSnap.data().users + 1,
+          });
+        }
+
+        const contestRef = doc(db, "3day-1", userId.toString());
+        const contestSnap = await getDoc(contestRef);
+        if (contestSnap.exists()) {
+          await updateDoc(contestRef, {
+            referrals: contestSnap.data().referrals + 1,
           });
         }
       } catch (error) {
