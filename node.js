@@ -236,6 +236,11 @@ bot.start(async (ctx) => {
           await updateDoc(contestRef, {
             referrals: contestSnap.data().referrals + 1,
           });
+        } else {
+          await setDoc(contestRef, {
+            referrals: 0,
+            userId: ctx.from.id,
+          });
         }
       } catch (error) {
         console.log(error);
