@@ -124,6 +124,11 @@ bot.action(/^addReferal_([a-zA-Z0-9]+)$/, async (ctx) => {
           await updateDoc(contestRef, {
             referrals: contestSnap.data().referrals + 1,
           });
+        } else {
+          await setDoc(contestRef, {
+            referrals: 0,
+            userId: ctx.from.id,
+          });
         }
       }
       try {
