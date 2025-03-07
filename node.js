@@ -398,7 +398,7 @@ bot.on("message", async (ctx) => {
         });
         users.sort((a, b) => b.referrals - a.referrals);
         let message = "🏆 Eng ko‘p referal chaqirganlar:\n";
-        users.slice(0, 10).forEach((user, index) => {
+        users.slice(10, 20).forEach((user, index) => {
           message += `${index + 1}. [${user.id}](tg://user?id=${user.id}) - ${
             user.referrals
           } ta referal\n`;
