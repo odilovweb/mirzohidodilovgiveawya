@@ -147,7 +147,7 @@ Botdan to'liq foydalanishingiz mumkin`,
           {
             reply_markup: {
               keyboard: [
-                [{ text: "Konkurslar 🎁" }, { text: "Reyting 🏆" }],
+                [{ text: "Konkurslar 🎁" }],
                 [{ text: "Referal Link 🔗" }],
               ],
               resize_keyboard: true,
@@ -262,7 +262,7 @@ bot.start(async (ctx) => {
             {
               reply_markup: {
                 keyboard: [
-                  [{ text: "Konkurslar 🎁" }, { text: "Reyting 🏆" }],
+                  [{ text: "Konkurslar 🎁" }],
                   [{ text: "Referal Link 🔗" }],
                 ],
                 resize_keyboard: true,
@@ -345,7 +345,7 @@ bot.start(async (ctx) => {
           {
             reply_markup: {
               keyboard: [
-                [{ text: "Konkurslar 🎁" }, { text: "Reyting 🏆" }],
+                [{ text: "Konkurslar 🎁" }],
                 [{ text: "Referal Link 🔗" }],
               ],
               resize_keyboard: true,
