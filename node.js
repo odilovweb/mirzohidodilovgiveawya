@@ -72,13 +72,17 @@ bot.action(/^addReferal_([a-zA-Z0-9]+)$/, async (ctx) => {
     const isMember = await checkMembership(ctx.from.id);
     if (isMember) {
       if (userId) {
-        bot.telegram.sendMessage(
-          userId,
-          `[${ctx.from.id}](tg://user?id=${ctx.from.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi va to'liq shartlarni bajardi , referal hisobingizga qo'shildi✅🎊`,
-          {
-            parse_mode: "Markdown",
-          }
-        );
+        try {
+          bot.telegram.sendMessage(
+            userId,
+            `[${ctx.from.id}](tg://user?id=${ctx.from.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi va to'liq shartlarni bajardi , referal hisobingizga qo'shildi✅🎊`,
+            {
+              parse_mode: "Markdown",
+            }
+          );
+        } catch (error) {
+          console.log(error);
+        }
         const inviterRef = doc(db, "users", userId.toString());
         const inviterSnap = await getDoc(inviterRef);
         if (inviterSnap.exists()) {
@@ -217,13 +221,17 @@ bot.start(async (ctx) => {
         if (referralId) {
           const inviterRef = doc(db, "users", referralId.toString());
           const inviterSnap = await getDoc(inviterRef);
-          bot.telegram.sendMessage(
-            referralId,
-            `[${ctx.from.id}](tg://user?id=${ctx.from.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi va to'liq shartlarni bajardi , referal hisobingizga qo'shildi✅🎊`,
-            {
-              parse_mode: "Markdown",
-            }
-          );
+          try {
+            bot.telegram.sendMessage(
+              referralId,
+              `[${ctx.from.id}](tg://user?id=${ctx.from.id}) - Ushbu foydalanuvchi sizning referal linkingiz orqali botga start bosdi va to'liq shartlarni bajardi , referal hisobingizga qo'shildi✅🎊`,
+              {
+                parse_mode: "Markdown",
+              }
+            );
+          } catch (error) {
+            console.log(error);
+          }
           if (inviterSnap.exists()) {
             await updateDoc(inviterRef, {
               referrals: inviterSnap.data().referrals + 1,
